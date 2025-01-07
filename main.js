@@ -43,6 +43,9 @@ todoForm.onsubmit = function (e) {
 };
 
 function render() {
+    if (!tasks.length) {
+       return taskList.innerHTML = '<li class="empty-message">No tasks available</li>';
+    }
     const html = tasks
         .map(
             (task, index) =>
