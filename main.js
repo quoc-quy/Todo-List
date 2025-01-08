@@ -1,4 +1,4 @@
-const tasks = [];
+const tasks = JSON.parse(localStorage.getItem('tasks')) ?? [];
 
 const taskList = document.querySelector("#task-list");
 const todoInput = document.querySelector("#todo-input");
@@ -8,6 +8,10 @@ const submit = document.querySelector("#submit");
 function isDuplicateTask(newTitle, excludeIndex = -1) {
     const isDuplicate = tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && excludeIndex !== index)
     return isDuplicate;
+}
+
+function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(tasks))
 }
 
 taskList.onclick = function (e) {
@@ -32,13 +36,16 @@ taskList.onclick = function (e) {
 
         task.title = newTitle;
         render();
+        saveTasks();
     } else if (e.target.closest(".done")) {
         task.completed = !task.completed;
         render();
+        saveTasks();
     } else if (e.target.closest(".delete")) {
         if (confirm(`Are you sure you want to delete ${task.title} !!!`)) {
             tasks.splice(taskIndex, 1);
             render();
+            saveTasks();
         }
     }
 };
@@ -69,6 +76,7 @@ todoForm.onsubmit = function (e) {
         completed: false,
     });
     render();
+    saveTasks();
 
     todoInput.value = "";
 };
