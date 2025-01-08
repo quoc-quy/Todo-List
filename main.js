@@ -13,6 +13,11 @@ taskList.onclick = function (e) {
 
     if (e.target.closest(".edit")) {
         const newTitle = prompt("Enter your new task: ", task.title);
+        if(newTitle === null) return;
+        if(!newTitle.trim()) {
+            alert(`Task title can't be empty!!!`);
+            return;
+        }
         task.title = newTitle;
         render();
     } else if (e.target.closest(".done")) {
