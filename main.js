@@ -16,7 +16,14 @@ function saveTasks() {
 
 taskList.onclick = function (e) {
     const taskItem = e.target.closest(".task-item");
-    const taskIndex = taskItem.getAttribute("task-index");
+
+    if(!taskItem) return; // taskItem mà null thì thoát hàm
+
+    // const taskIndex = taskItem.getAttribute("data-index");
+    const taskIndex = +taskItem.dataset.index;
+    console.log(taskItem);
+    
+
     const task = tasks[taskIndex];
     console.log(taskItem);
 
@@ -24,7 +31,7 @@ taskList.onclick = function (e) {
         const newTitle = prompt("Enter your new task: ", task.title);
         if(newTitle === null) return; // Kiểm tra khi nhấn nút cancel newTitle trả về null
 
-        if(!newTitle.trim()) { //Kiểm tra khi người dùng nhập khoảngg trắngtrắng
+        if(!newTitle.trim()) { //Kiểm tra khi người dùng nhập khoảngg trắng 
             alert(`Task title can't be empty!!!`);
             return;
         }
@@ -49,13 +56,6 @@ taskList.onclick = function (e) {
         }
     }
 };
-
-// function isDuplicate(tasks, newTitle, taskIndex) {
-//     if(tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && taskIndex !== index && !taskIndex)) {
-//         alert(`Task title is Duplicate, Please enter task title difference!!!`);
-//         return true;
-//     } else return false;
-// }
 
 todoForm.onsubmit = function (e) {
     e.preventDefault();
@@ -91,7 +91,7 @@ function render() {
                 `
     <li class="task-item ${
         task.completed ? "completed" : ""
-    }" task-index = ${index}>
+    }" data-index = ${index}>
         <span class="task-title">${task.title}</span>
         <div class="task-action">
             <button  class="task-btn edit">Edit</button>
