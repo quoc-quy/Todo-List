@@ -5,6 +5,11 @@ const todoInput = document.querySelector("#todo-input");
 const todoForm = document.querySelector("#todo-form");
 const submit = document.querySelector("#submit");
 
+function isDuplicateTask(newTitle, excludeIndex = -1) {
+    const isDuplicate = tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && excludeIndex !== index)
+    return isDuplicate;
+}
+
 taskList.onclick = function (e) {
     const taskItem = e.target.closest(".task-item");
     const taskIndex = taskItem.getAttribute("task-index");
@@ -13,11 +18,18 @@ taskList.onclick = function (e) {
 
     if (e.target.closest(".edit")) {
         const newTitle = prompt("Enter your new task: ", task.title);
-        if(newTitle === null) return;
-        if(!newTitle.trim()) {
+        if(newTitle === null) return; // Kiểm tra khi nhấn nút cancel newTitle trả về null
+
+        if(!newTitle.trim()) { //Kiểm tra khi người dùng nhập khoảngg trắngtrắng
             alert(`Task title can't be empty!!!`);
             return;
         }
+
+        ;
+        if(isDuplicateTask(newTitle, taskIndex)) {
+            return;
+        }
+
         task.title = newTitle;
         render();
     } else if (e.target.closest(".done")) {
@@ -31,15 +43,29 @@ taskList.onclick = function (e) {
     }
 };
 
+// function isDuplicate(tasks, newTitle, taskIndex) {
+//     if(tasks.some((task, index) => task.title.toLowerCase() === newTitle.toLowerCase() && taskIndex !== index && !taskIndex)) {
+//         alert(`Task title is Duplicate, Please enter task title difference!!!`);
+//         return true;
+//     } else return false;
+// }
+
 todoForm.onsubmit = function (e) {
     e.preventDefault();
-
-    if (!todoInput.value.trim()) {
+    const newValue = todoInput.value.trim();
+    if (!newValue) {
         todoInput.value = "";
         return alert("Please write something!");
     }
+
+    if(isDuplicateTask(newValue)) {
+        alert(`Task title is Duplicate, Please enter task title difference!!!`);
+        todoInput.value = "";
+        return;
+    }
+
     tasks.push({
-        title: todoInput.value.trim(),
+        title: newValue,
         completed: false,
     });
     render();
